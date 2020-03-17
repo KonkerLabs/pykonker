@@ -1,0 +1,6 @@
+oauthlib==3.0.1
+requests-oauthlib==1.2.0
+jsonschema==3.0.1
+urllib3==1.24.1
+arrow==0.13.1
+numpy==1.16.2

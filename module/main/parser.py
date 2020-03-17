@@ -8,7 +8,7 @@ AFTER YOU CREATED YOUR OWN ORIGINAL WORK, YOU CAN REPLACE THIS HEADER :)
 import sys
 import argparse
 
-from .myclass import RunMe
+from .api import Client
 
 
 def main(name=None):
@@ -20,21 +20,46 @@ def main(name=None):
         module_name = __loader__.name.split('.')[0]
         parser = argparse.ArgumentParser(
             prog=module_name,
-            description="This is my new shiny pip package called: " + module_name,
+            description="Konker REST API for python: " + module_name,
         )
 
-        parser.add_argument('--name', action='store', nargs=1, required=False, type=str,
-                            default=['dummy'],
-                            help="Add a name")
+        parser.add_argument('-u', '--username', action='store', nargs=1, required=False, type=str,
+                            default=['john@acme.com'],
+                            help="username")
+        parser.add_argument('-p', '--password', action='store', nargs=1, required=False, type=str,
+                            default=['tiger'],
+                            help="password")
 
         args = parser.parse_args(sys.argv[1:])
 
-        if args.name:
-            # argparser provides us a list, even if only one argument
-            if isinstance(args.name, list) and isinstance(args.name[0], str):
-                name = args.name[0]
+        konker = Client()
+        konker.login(username=args.username[0] , password=args.password[0]) 
+
+        applications = konker.getApplications()
+
+        print('CONNECTED TO KONKER PLATFORM')
+        
+        for application in applications:
+            print('>> GET INFORMATION FOR APPLICATION {}'.format(application['name']))
+            devices = konker.getAllDevicesForApplication(application['name'])
+            if devices:
+                print('\tDEVICES for "{}" are:'.format(application['name']))
+                print('\t{:34}\t{:20}\t{}\t{}\t{}'.format('guid', 'name', 'location', 'active', 'description'))
+                for device in devices:
+                    print('\t\t{:34}\t{:20}\t{}\t{}\t{}'.format(device['guid'], device['name'], device['locationName'], device['active'], device['description']))
+            else:
+                print('\tno devices found for "{}"'.format(application))
+
+            locations = konker.getLocationsForApplication(application['name'])
+            print ('\tLOCATIONS FOR {}'.format(application['name']))
+            if locations:
+                for location in locations:
+                    print('\t\t{}\t{}\t'.format(location['name'], location['guid']))
 
 
-    instance = RunMe(name=name)
-    sys.stdout.write(instance.say_hello() + "\n")
+        if (konker.checkConnection()):
+            sys.stdout.write('connected to Konker platform\n')
+        else:
+            return 1
+
     return 0

@@ -14,9 +14,9 @@ PWD ?= pwd_unknown
 
 # retrieve NAME from /variables file
 MODULE_NAME = \
-	$(shell awk -F= '/^NAME\ ?=/{gsub(/\47|"/, "", $$NF);print $$NF;exit}' variables)
+	$(shell awk -F= '/^NAME=/{gsub(/\47|"/, "", $$NF);print $$NF;exit}' variables)
 MODULE_VERSION = \
-	$(shell awk -F= '/^VERSION\ ?=/{gsub(/\47|"/, "", $$NF);print $$NF;exit}' variables)
+	$(shell awk -F= '/^VERSION=/{gsub(/\47|"/, "", $$NF);print $$NF;exit}' variables)
 
 # if vars not set specifially: try default to environment, else fixed value.
 # strip to ensure spaces are removed in future editorial mistakes.

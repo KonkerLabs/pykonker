@@ -1,10 +1,13 @@
-FROM alpine as base
+# FROM alpine as base
+FROM amancevice/pandas:1.0.1-alpine as base
 
 RUN apk update \
     && apk add --no-cache \
         bash \
         python3 \
         build-base \
+	libressl-dev \
+	libffi-dev \
         python3-dev \
         openssh \
         ca-certificates \
@@ -29,6 +32,8 @@ RUN apk update \
 
 FROM scratch as user
 COPY --from=base . .
+
+# RUN python3 -m pip install -r requirements.txt 
 
 ARG HOST_UID=${HOST_UID:-4000}
 ARG HOST_USER=${HOST_USER:-nodummy}
