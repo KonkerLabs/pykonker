@@ -25,6 +25,9 @@ RUN apk update \
         jinja2 \
         twine \
         awscli \
+        oauthlib \
+        requests-oauthlib \
+        arrow \
     && rm -rf /opt/build/* \
     && rm -rf /var/cache/apk/* \
     && rm -rf /root/.cache/* \

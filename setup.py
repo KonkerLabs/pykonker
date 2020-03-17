@@ -30,6 +30,12 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     packages=[envstring("NAME"), envstring("NAME") + ".main"],
+    install_requires=[
+        'oauthlib', 
+        'requests_oauthlib',
+        'arrow',
+        'pandas'
+    ],
     classifiers=[
         "Operating System :: POSIX :: Linux",
         "License :: OSI Approved :: MIT License",

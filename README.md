@@ -5,13 +5,30 @@ with Konker REST API
 
 # Sample Usage
 
-import * as konker from pykonker
+from pykonker.main.api import Client
 
-konker = konker.Client()
+konker = Client()
 konker.login(username='', password='')
 applications = konker.getApplications()
 devices = konker.getAllDevicesForApplication('default')
 data = konker.readData(guid=devices[0]['guid'])
+
+# Change and publish the library on PyPi
+
+make shell
+make pylint module 
+* NOTE: solve problems identified by lint process .. after that it will generate the module to be published
+make upload
+
+after that, the module will be available on pip 
+
+
+pip install pykonker
+
+or 
+
+pip install --upgrade pykonker 
+
 
 # References
 
