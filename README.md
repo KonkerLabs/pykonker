@@ -44,3 +44,4 @@ pip install --upgrade pykonker
 [https://www.konkerlabs.com/developers/developers-en.html]
 [https://konker.atlassian.net/wiki/spaces/DEV/pages/28180518/Guia+de+Uso+da+Plataforma+Konker]
 [https://api.demo.konkerlabs.net/v1/swagger-ui.html]
+[https://itnext.io/create-build-and-ship-a-python3-pip-module-in-5-minutes-31dd6d9d5c8f]
