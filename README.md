@@ -10,9 +10,9 @@ from pykonker.main.api import Client
 
 konker = Client()
 konker.login(username='', password='')
-applications = konker.getApplications()
-devices = konker.getAllDevicesForApplication('default')
-data = konker.readData(guid=devices[0]['guid'])
+applications = konker.get_applications()
+devices = konker.get_all_devices_for_application('default')
+data = konker.read_data(guid=devices[0]['guid'])
 ```
 
 # Change and publish the library on PyPi
