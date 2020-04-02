@@ -1,5 +1,5 @@
 NAME=pykonker
-VERSION=1.2.0
+VERSION=1.3.0
 AUTHOR="Alexandre Junqueira"
 AUTHOR_EMAIL="alexjunq@konkerlabs.com"
 DESCRIPTION="provides a simple interface to connect, send and receive information from Konker REST API"

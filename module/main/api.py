@@ -86,14 +86,17 @@ class Client:
         if not self.oauth:
             raise Exception('not connected. login first')
 
-    def get_all_devices_for_application(self, application):
+    def get_all_devices_for_application(self, application, size=None):
         '''
         returns a list of devices for a specified application
         '''
         self.check_connection()
         #print('application = {}'.format(application))
         #print('API = {}'.format(self.base_api))
-        result = self.oauth.get("{}/v1/{}/devices/".format(self.base_api, application)).json()
+        url = "{}/v1/{}/devices/".format(self.base_api, application)
+        if size:
+            url = "{}&size={}".format(url, size)
+        result = self.oauth.get(url).json()
         #print(result)
         if result['code'] == 200:
             devices = result['result']
@@ -103,11 +106,11 @@ class Client:
             devices = None
         return devices
 
-    def get_all_devices(self):
+    def get_all_devices(self, size=None):
         '''
         retrieve a list of all devices connected to this application, visible to your user
         '''
-        return self.get_all_devices_for_application(self.application)
+        return self.get_all_devices_for_application(self.application, size)
 
     def get_locations_for_application(self, application):
         '''
@@ -154,15 +157,18 @@ class Client:
 
 
 
-    def get_all_devices_for_location(self, store):
+    def get_all_devices_for_location(self, store, size=None):
         '''
         retrieve a list of all devices for a given STORE.
         give just the store # as a parameter, for instance:
         app.getAllDevicesForStore(1234)
         '''
         self.check_connection()
-        devices = self.oauth.get("{}/v1/{}/devices/?locationName={}".format(
-            self.base_api, self.application, store)).json()['result']
+        url = "{}/v1/{}/devices/?locationName={}".format(
+            self.base_api, self.application, store)
+        if size:
+            url = "{}&size={}".format(url, size)
+        devices = self.oauth.get(url).json()['result']
         return devices
 
     def read_data(self, guid, channel=None, delta=-10, start_date=None):
