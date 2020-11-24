@@ -13,8 +13,14 @@ from requests_oauthlib import OAuth2Session
 # data handling libraries
 import arrow
 #import numpy as np
-from pandas.io.json import json_normalize
-import pandas as pd
+
+# does not use by default PANDAS anymore
+# let the user provide the json_normalize make the process
+# faster
+#
+
+# from pandas.io.json import json_normalize
+# import pandas as pd
 
 class Client:
     '''
@@ -47,8 +53,8 @@ class Client:
                 username = credentials[cid]['username']
                 password = credentials[cid]['password']
                 print('connected')
-            except KeyError:
-                raise KeyError('"{}" not found on credentials file'.format(cid))
+            except KeyError as err:
+                raise KeyError('"{}" not found on credentials file'.format(cid)) from err
         else:
             # must have informed username and password ....
             if (len(username) == 0 or len(password) == 0):
@@ -95,7 +101,7 @@ class Client:
         #print('API = {}'.format(self.base_api))
         url = "{}/v1/{}/devices/".format(self.base_api, application)
         if size:
-            url = "{}&size={}".format(url, size)
+            url = "{}?size={}".format(url, size)
         result = self.oauth.get(url).json()
         #print(result)
         if result['code'] == 200:

@@ -15,8 +15,8 @@ data = konker.readData(guid=devices[0]['guid'])
 
 # Change and publish the library on PyPi
 
-make shell
-make pylint module 
+make shell 
+make pylint  
 * NOTE: solve problems identified by lint process .. after that it will generate the module to be published
 make upload
 
