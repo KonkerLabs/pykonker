@@ -6,8 +6,7 @@ AFTER YOU CREATED YOUR OWN ORIGINAL WORK, YOU CAN REPLACE THIS HEADER :)
 """
 
 import sys
-from .main.parser import main
-
+from .main import parser
 
 if __name__ == '__main__':
-    sys.exit(main())
+    sys.exit(parser.main())

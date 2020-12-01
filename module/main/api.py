@@ -13,8 +13,14 @@ from requests_oauthlib import OAuth2Session
 # data handling libraries
 import arrow
 #import numpy as np
-from pandas.io.json import json_normalize
-import pandas as pd
+
+# does not use by default PANDAS anymore
+# let the user provide the json_normalize make the process
+# faster
+#
+
+# from pandas.io.json import json_normalize
+# import pandas as pd
 
 class Client:
     '''
@@ -47,8 +53,8 @@ class Client:
                 username = credentials[cid]['username']
                 password = credentials[cid]['password']
                 print('connected')
-            except KeyError:
-                raise KeyError('"{}" not found on credentials file'.format(cid))
+            except KeyError as err:
+                raise KeyError('"{}" not found on credentials file'.format(cid)) from err
         else:
             # must have informed username and password ....
             if (len(username) == 0 or len(password) == 0):
@@ -86,14 +92,17 @@ class Client:
         if not self.oauth:
             raise Exception('not connected. login first')
 
-    def get_all_devices_for_application(self, application):
+    def get_all_devices_for_application(self, application, size=None):
         '''
         returns a list of devices for a specified application
         '''
         self.check_connection()
         #print('application = {}'.format(application))
         #print('API = {}'.format(self.base_api))
-        result = self.oauth.get("{}/v1/{}/devices/".format(self.base_api, application)).json()
+        url = "{}/v1/{}/devices/".format(self.base_api, application)
+        if size:
+            url = "{}?size={}".format(url, size)
+        result = self.oauth.get(url).json()
         #print(result)
         if result['code'] == 200:
             devices = result['result']
@@ -103,11 +112,11 @@ class Client:
             devices = None
         return devices
 
-    def get_all_devices(self):
+    def get_all_devices(self, size=None):
         '''
         retrieve a list of all devices connected to this application, visible to your user
         '''
-        return self.get_all_devices_for_application(self.application)
+        return self.get_all_devices_for_application(self.application, size)
 
     def get_locations_for_application(self, application):
         '''
@@ -154,15 +163,18 @@ class Client:
 
 
 
-    def get_all_devices_for_location(self, store):
+    def get_all_devices_for_location(self, store, size=None):
         '''
         retrieve a list of all devices for a given STORE.
         give just the store # as a parameter, for instance:
         app.getAllDevicesForStore(1234)
         '''
         self.check_connection()
-        devices = self.oauth.get("{}/v1/{}/devices/?locationName={}".format(
-            self.base_api, self.application, store)).json()['result']
+        url = "{}/v1/{}/devices/?locationName={}".format(
+            self.base_api, self.application, store)
+        if size:
+            url = "{}&size={}".format(url, size)
+        devices = self.oauth.get(url).json()['result']
         return devices
 
     def read_data(self, guid, channel=None, delta=-10, start_date=None):
@@ -210,15 +222,18 @@ class Client:
             stats = statsx.json()['result']
             if (stats and len(stats) > 0):
                 sys.stdout.write('.')
-                stats_dfx = json_normalize(stats).set_index('timestamp')
-                stats_dfx = stats_dfx[3:]
-                stats_dfa.append(stats_dfx)
+                #stats_dfx = json_normalize(stats).set_index('timestamp')
+                stats_dfx = stats
+                #stats_dfx = stats_dfx[3:]
+                #stats_dfa.append(stats_dfx)
+                stats_dfa.extend(stats_dfx)
             else:
                 sys.stdout.write('X')
                 #print('ERROR = {}'.format(statsx.json()))
             dt_start = dt_end
         print('\nDone')
-        return pd.concat(stats_dfa) if len(stats_dfa) > 0 else pd.DataFrame()
+        #return pd.concat(stats_dfa) if len(stats_dfa) > 0 else pd.DataFrame()
+        return stats_dfa
 
 
     @staticmethod

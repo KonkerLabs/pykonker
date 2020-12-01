@@ -51,7 +51,7 @@ shell:
 
 .PHONY: fork
 FILES = \
-	module files Makefile Dockerfile docker-compose.yml setup.py MANIFEST.in variables .gitignore .pylintrc
+	module files Makefile Dockerfile docker-compose.yml setup.py MANIFE`ST.in variables .gitignore .pylintrc
 DEST ?= $(dest)
 fork:
 ifeq ($(DEST),)
@@ -79,8 +79,9 @@ module:
 
 .PHONY: pylint
 pylint:
-	$(RUN_DOCK) "cd ~/$(MODULE_NAME)/module \
-		&& pylint --rcfile=../.pylintrc * -f parseable"
+	echo $(MODULE_NAME)
+	$(RUN_DOCK) "cd ~/$(MODULE_NAME) \
+		&& pylint --rcfile=.pylintrc module -f parseable"
 
 .PHONY: upload
 upload:
